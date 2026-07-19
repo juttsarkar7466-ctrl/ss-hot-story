@@ -1,25 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SS Hot Story Portal</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Hot SS Story Portal</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary: #ff3838; --card: rgba(25, 25, 25, 0.82); --text: #ffffff; --border: rgba(255, 255, 255, 0.12); }
+        body { background: linear-gradient(rgba(13, 13, 13, 0.75), rgba(13, 13, 13, 0.75)), url('https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&w=1600&q=80'); background-size: cover; background-attachment: fixed; color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; }
+        .glass-panel { background: var(--card); backdrop-filter: blur(16px); border: 1px solid var(--border); border-radius: 14px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .font-urdu { font-family: 'Noto Nastaliq Urdu', serif; direction: rtl; text-align: right; line-height: 2.6 !important; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="glass-panel">
-            <h1>SS Hot Story Portal</h1>
-            <p>Welcome to the portal. Manage your content below.</p>
-            
-            <div class="admin-section">
-                <h3>Post a New Story</h3>
-                <input type="text" id="storyTitle" placeholder="Enter story title...">
-                <textarea id="storyContent" rows="5" placeholder="Write your story here..."></textarea>
-                <button onclick="postStory()">Publish Story</button>
-            </div>
+
+    <nav class="glass-panel m-4 px-6 py-4 flex items-center justify-between">
+        <h1 class="text-2xl font-black text-red-500"><i class="fa-solid fa-heart-pulse"></i> Hot SS Story</h1>
+        <div class="flex gap-4">
+            <button onclick="openWriteStoryModal()" class="bg-red-500 px-4 py-2 rounded-lg font-bold">Write Story</button>
+            <button id="adminStatusBtn" onclick="openAdminPanel()" class="bg-neutral-700 px-3 py-2 rounded-lg font-bold">Admin</button>
+        </div>
+    </nav>
+
+    <div class="container max-w-4xl mx-auto p-4">
+        <div id="storiesContainer" class="space-y-6"></div>
+    </div>
+
+    <!-- Write Story Modal -->
+    <div id="storyModal" class="modal">
+        <div class="glass-panel p-6 max-w-lg w-full m-4">
+            <h2 class="text-xl font-bold text-red-500 mb-4">Write New Story</h2>
+            <form id="storyForm" class="space-y-4">
+                <input type="text" id="storyTitle" placeholder="Title" class="w-full bg-neutral-800 p-3 rounded" required>
+                <textarea id="storyContent" rows="5" placeholder="Content..." class="w-full bg-neutral-800 p-3 rounded" required></textarea>
+                <button type="submit" class="w-full bg-red-500 py-2 rounded font-bold">Publish</button>
+                <button type="button" onclick="closeStoryModal()" class="w-full bg-neutral-700 py-2 rounded">Cancel</button>
+            </form>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        let demoStories = [
+            { id: 1, title: "سرخ گلاب کا راز", content: "یہ ایک رومانوی کہانی ہے...", category: "Urdu Story", author: "Guest Jutt" }
+        ];
+
+        function loadStories() {
+            const container = document.getElementById('storiesContainer');
+            container.innerHTML = demoStories.map(s => `
+                <div class="glass-panel p-6">
+                    <h3 class="text-xl font-bold text-red-400">${s.title}</h3>
+                    <p class="mt-2 font-urdu">${s.content}</p>
+                </div>
+            `).join('');
+        }
+
+        function openWriteStoryModal() { document.getElementById('storyModal').style.display = 'flex'; }
+        function closeStoryModal() { document.getElementById('storyModal').style.display = 'none'; }
+
+        document.getElementById('storyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            Swal.fire('Success!', 'Story Published!', 'success');
+            closeStoryModal();
+        });
+
+        loadStories();
+        function openAdminPanel() { alert("Admin Access Required"); }
+    </script>
 </body>
 </html>
